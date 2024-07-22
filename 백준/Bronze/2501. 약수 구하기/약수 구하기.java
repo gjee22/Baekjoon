@@ -7,23 +7,15 @@ public class Main {
 		String[] input = br.readLine().split(" ");
 		int n = Integer.parseInt(input[0]), k = Integer.parseInt(input[1]);
 		
-		int res = findNthFactor(n, k);
-		
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		bw.write(String.valueOf(res));
-		bw.flush();
-		bw.close();
-	}
-	
-	static int findNthFactor(int n, int k) {
 		int count = 0;
 		for (int i = 1; i <= n/2 + 1; i++) {
-			if (n % i == 0) {
-				count++;
-				if (count == k) return i;
+		  count = (n % i == 0) ? count + 1 : count;
+		  if (count == k) {
+				 System.out.println(i);
+				 return;
 			}
 		}
-		if (count == k - 1) return n;
-		return 0;
+		if (count == k - 1) System.out.println(n);
+		else System.out.println(0); 
 	}
 }
