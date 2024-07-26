@@ -1,7 +1,6 @@
 import java.util.*;
 import java.io.*;
 
-
 class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,8 +10,8 @@ class Main {
 		int min = Integer.MAX_VALUE;
 		for (int i = 0; i < n; i++) {
 			int cur = Integer.parseInt(numStrings[i]);
-			max = max < cur ? cur : max;
-			min = min > cur ? cur : min;
+			max = Math.max(cur, max);
+			min = Math.min(cur, min);
 		}
 		System.out.println(min + " " + max);
 	}
