@@ -13,6 +13,7 @@ class Main {
 		int count = 0;
 		for (int i = 0; i < numCases; i++) {
 			int cur = Integer.parseInt(st.nextToken());
+			if (cur == 1) continue;
 			boolean isPrime = true;
 			for (int j = 2; j <= cur / 2; j++) {
 				if (cur % j == 0) {
@@ -20,7 +21,7 @@ class Main {
 				 break;
 				}
 			}
-			if (isPrime && cur != 1) count++;
+			if (isPrime) count++;
 		}
 		System.out.println(count);
 	}
