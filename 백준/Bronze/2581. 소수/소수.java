@@ -12,8 +12,6 @@ class Main {
 		boolean[] notPrime = new boolean[n + 1];
 		notPrime[0] = true;
 		notPrime[1] = true;
-		
-		if (m == 1) m++;
 		int sum = 0, min = -1;
 		for (int i = m; i <= n; i++) {
 			if (notPrime[i]) continue;
