@@ -6,8 +6,8 @@ import java.util.StringTokenizer;
 class Main {
 	static int max = Integer.MIN_VALUE;
 	static int n, k;
-	static String[] words;
-	static boolean[] visited;
+	static int[] words;
+	static int visited;
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,18 +22,18 @@ class Main {
 			return;
 		}
 		
-		words = new String[n];
-		for(int i = 0; i < n; i++) {
-			words[i] = br.readLine();
-			words[i] = words[i].substring(4, words[i].length() - 4);
-		}
+		visited |= 1 << 0;
+		visited |= 1 << ('n' - 'a');
+		visited |= 1 << ('t' - 'a');
+		visited |= 1 << ('i' - 'a');
+		visited |= 1 << ('c' - 'a');
 		
-		visited = new boolean[26];
-		visited['a' - 'a'] = true; 
-		visited['n' - 'a'] = true;
-		visited['t' - 'a'] = true;
-		visited['i' - 'a'] = true;
-		visited['c' - 'a'] = true;
+		words = new int[n];
+		for(int i = 0; i < n; i++) {
+			String word = br.readLine();
+			for (char c : word.toCharArray())
+				words[i] |= 1 << (c - 'a');
+		}
 		dfs(0, 0);
 		System.out.println(max);		
 	}
@@ -41,26 +41,18 @@ class Main {
 	public static void dfs(int alpha, int len) {
 		if (len + 5 == k) {
 			int count = 0;
-			for (String w : words) {
-				boolean readable = true;
-				for (char c : w.toCharArray()) {
-					if (!visited[c - 'a']) {
-						readable = false;
-						break;
-					}
-				}
-				if (readable) count++;
+			for (int w : words) {
+				if ((w & visited) == w) count++;	
 			}
 			max = Math.max(max, count);
 			return;
 		}
 		
 		for (int i = alpha; i < 26; i++) {
-			if (!visited[i]) {
-				visited[i] = true;
-				dfs(i + 1, len + 1);
-				visited[i] = false;
-			}
+			if ((visited & (1 << i)) != 0) continue;
+			visited |= (1 << i);
+			dfs(i + 1, len + 1);
+			visited &= ~(1 << i);		
 		}
 	}
 }
