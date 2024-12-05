@@ -8,20 +8,16 @@ class Main {
 			arr[i] = read();
 		}
 		
-		boolean isSwap = false;
 		for (int i = 0; i < N; i++) {
-			isSwap = false;
-			for (int j = 0; j < N - i - 1; j++) {
-				if (arr[j] > arr[j + 1]) {
-					int tmp = arr[j]; 
-					arr[j] = arr[j + 1]; 
-					arr[j + 1] = tmp;
-					isSwap = true;
+			int min = i;
+			for (int j = i + 1; j < N; j++) {
+				if (arr[j] < arr[min]) { 
+					min = j;
 				}
 			}
-			if (!isSwap) { 				
-				break;
-			}
+			int tmp = arr[i]; 
+			arr[i] = arr[min]; 
+			arr[min] = tmp;
 		}		
 		for (int n = 0; n < N; n++) { 
 			System.out.println(arr[n]);
