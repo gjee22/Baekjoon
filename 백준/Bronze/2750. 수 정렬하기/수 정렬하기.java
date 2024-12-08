@@ -1,27 +1,45 @@
 import java.io.IOException;
 
 class Main {
+	static int[] arr;
+	static int N;
+	
 	public static void main(String[] args) throws IOException {
-		int N = read();
-		int[] arr = new int[N];
+		N = read();
+		arr = new int[N];
 		for (int i = 0; i < N; i++) {
 			arr[i] = read();
 		}
 		
-		for (int i = 0; i < N; i++) {
-			int min = i;
-			for (int j = i + 1; j < N; j++) {
-				if (arr[j] < arr[min]) { 
-					min = j;
-				}
+		int[] gaps = { 1, 4, 10, 23, 57, 132, 301, 701, 1750, 3937, 
+		8858, 19930, 44842, 100894, 227011, 510774,
+		1149241, 2585792, 5818032, 13090572, 29453787, 
+		66271020, 149109795, 335497038, 754868335, 1698453753};
+		int gapIndex = gaps.length - 1;
+		while (gaps[gapIndex] > N) gapIndex--;
+		
+		while (gapIndex >= 0) { 
+			for (int i = 0; i < gaps[gapIndex]; i++) {
+				shellSort(i, gaps[gapIndex]); 
 			}
-			int tmp = arr[i]; 
-			arr[i] = arr[min]; 
-			arr[min] = tmp;
-		}		
+			gapIndex--;
+		}
+		
 		for (int n = 0; n < N; n++) { 
 			System.out.println(arr[n]);
 		}
+	}
+	
+	static void shellSort(int start, int gap) {
+		for (int i = start + gap; i < N; i += gap) {
+			int j = i; 
+			int target = arr[j];
+			while (j > start && target < arr[j - gap]) {
+				arr[j] = arr[j - gap]; 
+				j -= gap;
+			}
+			arr[j] = target;
+		}		
 	}
 	
 	static int read() throws IOException {
