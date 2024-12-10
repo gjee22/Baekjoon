@@ -1,54 +1,57 @@
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 
-class Main {
-	static int[] sorted;
-	
+class Main {	
+	static int[] arr;
 	public static void main(String[] args) throws IOException {
 		int N = read();
-		int[] arr = new int[N];
-		sorted = new int[N];
+		arr = new int[N];
 		for (int i = 0; i < N; i++) {
 			arr[i] = read();
 		}
 		
-		mergeSort(arr, 0, N);
-			
-		for (int n = 0; n < N; n++) { 
-			System.out.println(arr[n]);
-		}
-	}
-	
-	static void mergeSort(int[] arr, int start, int end) {
-		if (end - start <= 1) return;
-		int mid = start + ((end - start) / 2);
-		mergeSort(arr, start, mid);
-		mergeSort(arr, mid, end);
-		merge(arr, start, mid, end);
-	}
-	
-	static void merge(int[] arr, int start, int mid, int end) {
-		int left = start;
-		int right = mid;
-		int i = start;
-		while (left < mid && right < end) {
-			if (arr[left] < arr[right]) {
-				sorted[i++] = arr[left++];
-			}
-			else {
-				sorted[i++] = arr[right++];
-			}
-		}
-		while (left < mid) {
-			sorted[i++] = arr[left++];
-		}
-		while (right < end) {
-			sorted[i++] = arr[right++];
-		}
+		partition(0, N - 1);
 		
-		// 꼭 배열 복사를 해줘야 됨
-		for (int j = start; j < end; j++) {
-			arr[j] = sorted[j];
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i] + "\n");
+    }
+    bw.flush();
+    bw.close();
+	}
+	
+	static void partition(int left, int right) {
+		if (left >= right) return;
+		int low = left;
+		int high = right;
+		int p = getRandomPivot(left, right); 	
+		while (low <= high) {
+			while (low <= high && arr[low] < p) low++;
+			while (low <= high && arr[high] > p) high--;
+			if (low <= high) {
+				swap(low++, high--);
+			}
 		}
+		partition(left, high);
+		partition(low, right);
+	}
+	
+	static int getRandomPivot(int start, int end) {
+		return arr[(int) (Math.random() * (end - start + 1) + start)];
+	}
+	
+	static int getMedianPivot(int left, int mid, int right) {
+		if (arr[left] > arr[mid]) swap(left, mid);
+		if (arr[mid] > arr[right]) swap(mid, right);
+		if (arr[left] > arr[mid]) swap(left, mid);
+		return arr[mid];
+	}
+	
+	static void swap(int a, int b) {
+		int temp = arr[a]; 
+		arr[a] = arr[b]; 
+		arr[b] = temp;
 	}
 	
 	static int read() throws IOException {
