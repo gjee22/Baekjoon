@@ -2,46 +2,23 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.lang.StringBuilder;
-import java.util.Arrays;
+import java.util.HashMap;
 
 class Main {
-    static int[] arr;
-    static int N, M;
 
     public static void main(String[] args) throws IOException {
-        N = read();
-        arr = new int[N];
-        for (int i = 0; i < N; i++) { arr[i] = read(); }
-        Arrays.sort(arr);
+        int N = read();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < N; i++) { map.put(read(), 0); }
 
-        M = read();
+        int M = read();
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < M; i++) {
-            res.append(binarySearch(read())).append("\n");
+            res.append(map.containsKey(read()) ? 1 : 0).append("\n");
         }
         bw.write(res.toString());
         bw.close();
-    }
-
-    static int binarySearch(int n) {
-        int start = 0;
-        int end = N;
-        int mid = (start + end) / 2;
-        while (start < end) {
-            if (n == arr[mid]) {
-                return 1;
-            }
-            else if (n < arr[mid]) {
-                end = mid;
-                mid = (start + end) / 2;
-            }
-            else {
-                start = mid + 1;
-                mid = (start + end) / 2;
-            }
-        }
-        return 0;
     }
 
     static int read() throws IOException {
