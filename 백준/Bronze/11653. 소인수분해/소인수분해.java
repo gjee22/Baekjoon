@@ -11,18 +11,8 @@ class Main {
 		int N = Integer.parseInt(br.readLine());
 		if (N == 1) return;
 		
-		boolean[] notP = new boolean[N + 1];
-		notP[0] = true; notP[1] = true;
-		for (int i = 2; i * i <= N; i++) {
-			if (notP[i]) continue;
-			for (int j = i + i; j <= N; j += i) {
-				notP[j] = true;
-			}
-		}
-		
 		StringBuilder res = new StringBuilder();
 		for (int i = 2; i <= N; i++) {
-			if (notP[i]) continue;
 			while (N % i == 0 && N > 1) {
 				res.append(i).append("\n");
 				N /= i;
