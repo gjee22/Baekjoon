@@ -20,7 +20,7 @@ class Main {
 				strength[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < N / 2; i++) {
 			findFairTeam(1, i);
 		}
 		System.out.println(min);
