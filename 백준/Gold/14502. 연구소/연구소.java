@@ -22,24 +22,24 @@ class Main {
 				}
 			}
 		}
-		makeWalls(0);
+		makeWalls(0, 0);
 		System.out.println(max);
 	}
 
-	static void makeWalls(int numWalls) {
+	static void makeWalls(int start, int numWalls) {
 		if (numWalls == 3) {
 			int[][] res = spreadVirus();
 			max = Math.max(max, countSafetyZone(res));
 			return;
 		}
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (lab[i][j] == 0) {
-					lab[i][j] = 1;
-					makeWalls(numWalls + 1);
-					lab[i][j] = 0;
-				}
+		for (int idx = start; idx < N * M; idx++) {
+			int i = idx / M;
+			int j = idx % M;
+			if (lab[i][j] == 0) {
+				lab[i][j] = 1;
+				makeWalls(idx + 1, numWalls + 1);
+				lab[i][j] = 0;
 			}
 		}
 	}
