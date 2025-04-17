@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Objects;
 
 class Main {
 	static final int[] dr = { 0, 0, 1, -1 };
@@ -8,30 +6,12 @@ class Main {
 
 	static int N, M, max = -1;
 	static int[][] board;
-
-	static class Cell {
-		int r, c;
-
-		public Cell(int r, int c) {
-			this.r = r;
-			this.c = c;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			Cell c = (Cell) o;
-			return this.r == c.r && this.c == c.c;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(this.r, this.c);
-		}
-	}
+	static boolean[][] visited;
 
 	public static void main(String[] args) throws IOException {
 		N = read(); M = read();
 		board = new int[N][M];
+		visited = new boolean[N][M];
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				board[i][j] = read();
@@ -39,53 +19,48 @@ class Main {
 		}
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < M; c++) {
-				Cell cur = new Cell(r, c);
-				dfs(1, 0, cur, new HashSet<>());
-				bfs(cur);
+				search(1, 0, r, c);
 			}
 		}
 		System.out.println(max);
 	}
 
-	static void dfs(int n, int acc, Cell cur, HashSet<Cell> visited) {
+	static void search(int n, int acc, int r, int c) {
 		if (n > 4) {
 			max = Math.max(max, acc);
 			return;
 		}
 
-		visited.add(cur);
+		visited[r][c] = true;
+		acc += board[r][c];
 //		System.out.println("Current cell: " + cur.r + " " + cur.c + " with " + acc);
 		for (int i = 0; i < dr.length; i++) {
-			Cell next = new Cell(cur.r + dr[i], cur.c + dc[i]);
-			if (isInvalid(next) || visited.contains(next)) continue;
-			dfs(n + 1, acc + board[cur.r][cur.c], next, visited);
+			int nr = r + dr[i];
+			int nc = c + dc[i];
+			if (isInvalid(nr, nc) || visited[nr][nc]) continue;
+			search(n + 1, acc, nr, nc);
 		}
-		visited.remove(cur);
+		if (n == 2) {
+			int leftR = r + dr[0], leftC = c + dc[0];
+			int rightR = r + dr[1], rightC = c + dc[1];
+			int downR = r + dr[2], downC = c + dc[2];
+			int upR = r + dr[3], upC = c + dc[3];
+			if ((!isInvalid(leftR, leftC) && visited[leftR][leftC])
+					|| (!isInvalid(rightR, rightC) && visited[rightR][rightC])) {
+				if (!isInvalid(downR, downC) && !isInvalid(upR, upC))
+					max = Math.max(max, acc + board[downR][downC] + board[upR][upC]);
+			}
+			else if ((!isInvalid(upR, upC) && visited[upR][upC])
+					|| (!isInvalid(downR, downC) && visited[downR][downC])) {
+				if (!isInvalid(leftR, leftC) && !isInvalid(rightR, rightC))
+					max = Math.max(max, acc + board[leftR][leftC] + board[rightR][rightC]);
+			}
+		}
+		visited[r][c] = false;
 	}
 
-	static void bfs(Cell cur) {
-		int sum = board[cur.r][cur.c];
-		int count = 1;
-		int min = Integer.MAX_VALUE;
-		for (int i = 0; i < dr.length; i++) {
-			Cell next = new Cell(cur.r + dr[i], cur.c + dc[i]);
-			if (isInvalid(next)) continue;
-			count++;
-			int toAdd = board[next.r][next.c];
-			sum += toAdd;
-			min = Math.min(min, toAdd);
-		}
-		if (count > 4) {
-			sum -= min;
-			count--;
-		}
-		if (count == 4) {
-			max = Math.max(max, sum);
-		}
-	}
-
-	static boolean isInvalid(Cell c) {
-		return c.r < 0 || c.r >= N || c.c < 0 || c.c >= M;
+	static boolean isInvalid(int r, int c) {
+		return r < 0 || r >= N || c < 0 || c >= M;
 	}
 
 	static int read() throws IOException {
