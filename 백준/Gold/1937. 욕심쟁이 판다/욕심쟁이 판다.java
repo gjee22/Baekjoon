@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 class Main {
 	static int N;
@@ -8,12 +11,14 @@ class Main {
 	static final int[] dc = { 1, -1, 0, 0 };
 
 	public static void main(String[] args) throws IOException {
-		N = read();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
 		map = new int[N][N];
 		dp = new int[N][N];
 		for (int r = 0; r < N; r++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int c = 0; c < N; c++) {
-				map[r][c] = read();
+				map[r][c] = Integer.parseInt(st.nextToken());
 				dp[r][c] = -1;
 			}
 		}
@@ -21,7 +26,7 @@ class Main {
 		int max = 0;
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < N; c++) {
-				max = Math.max(max, dfs(r, c));
+				max = Math.max(max, dp[r][c] == -1 ? dfs(r, c) : dp[r][c]);
 			}
 		}
 		System.out.println(max);
@@ -42,16 +47,5 @@ class Main {
 
 	static boolean isValid(int r, int c) {
 		return r >= 0 && r < N && c >= 0 && c < N;
-	}
-
-	static int read() throws IOException {
-		int b;
-		do b = System.in.read(); while (b <= 32);
-		int n = 0;
-		do {
-			n = (n << 3) + (n << 1) + (b & 15);
-			b = System.in.read();
-		} while (b > 47 && b < 58);
-		return n;
 	}
 }
